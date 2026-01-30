@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Poema do Dia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Crimson+Text&display=swap" rel="stylesheet">
+<style>
+body { background:#0f1115; color:#e6e1d8; font-family:"Crimson Text",serif; }
+main { max-width:720px; margin:60px auto; padding:20px; }
+.box { background:#161922; padding:40px; border-left:4px solid #8b6f47; }
+.data { color:#9c9487; font-style:italic; margin-bottom:20px; }
+a { color:#8b6f47; text-decoration:none; }
+</style>
+</head>
+<body>
+
+<main></main>
+
+<footer style="text-align:center; margin:40px;">
+  <a href="arquivo.html">Ler poemas anteriores</a>
+</footer>
+
+<script>
+fetch("data/poemas.json")
+.then(r => r.json())
+.then(db => {
+
+  const DATA_INICIO = new Date(db.inicio + "T00:00:00");
+  const hojeReal = new Date();
+  const hoje = hojeReal < DATA_INICIO ? DATA_INICIO : hojeReal;
+
+  const poemasDisponiveis = db.poemas.filter(p =>
+    new Date(p.entraEm + "T00:00:00") <= hoje
+  );
+
+  if (poemasDisponiveis.length === 0) return;
+
+  const seed =
+    hoje.getFullYear()*10000 +
+    (hoje.getMonth()+1)*100 +
+    hoje.getDate();
+
+  const poema = poemasDisponiveis[seed % poemasDisponiveis.length];
+
+  const box = document.createElement("div");
+  box.className = "box";
+  box.innerHTML = `
+    <h2>Poema do Dia</h2>
+    <div class="data">${hoje.toLocaleDateString("pt-BR",{day:"2-digit",month:"long",year:"numeric"})}</div>
+    <p>${poema.texto.replace(/\n/g,"<br>")}</p>
+  `;
+  document.querySelector("main").appendChild(box);
+});
+</script>
+
+</body>
+</html>
