@@ -1,0 +1,25 @@
+{
+  "inicio": "2026-01-01",
+  "poemas": [
+    {
+      "id": 1,
+      "entraEm": "2026-01-01",
+      "texto": "Quando eu estava com você, implorava ao Tempo para que ele andasse devagar.\n\nAgora, eu insisto e clamo para que Ele corra o mais rápido possível.\n\nPorque sem você, não há sentido."
+    },
+    {
+      "id": 2,
+      "entraEm": "2026-01-01",
+      "texto": "Ontem eu estava cheio.\n\nHoje estou vazio."
+    },
+    {
+      "id": 3,
+      "entraEm": "2026-01-01",
+      "texto": "A lembrança do não-dito.\nDo não-feito.\nDo não-amado.\n\nOh! É tão terrível."
+    },
+    {
+      "id": 4,
+      "entraEm": "2026-01-01",
+      "texto": "Eu tô doente.\n\nJá fazem dias que eu tenho os sintomas...\n\nEu tô doente de amor por você."
+    }
+  ]
+}
