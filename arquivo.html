@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Calendário de Poemas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Crimson+Text&display=swap" rel="stylesheet">
+<style>
+body { background:#0f1115; color:#e6e1d8; font-family:"Crimson Text",serif; }
+main { max-width:900px; margin:40px auto; padding:20px; }
+.mes { margin-bottom:50px; }
+.mes h2 { border-bottom:1px solid #2a2d34; padding-bottom:10px; }
+.grid { display:grid; grid-template-columns:repeat(7,1fr); gap:10px; margin-top:20px; }
+.dia { background:#161922; padding:10px; cursor:pointer; }
+.dia:hover { background:#1e2230; }
+.numero { font-size:0.9em; color:#8b6f47; }
+.poema { display:none; margin-top:10px; font-size:0.95em; }
+</style>
+</head>
+<body>
+
+<main id="calendario"></main>
+
+<script>
+fetch("data/poemas.json")
+.then(r => r.json())
+.then(db => {
+
+  const DATA_INICIO = new Date(db.inicio + "T00:00:00");
+  const hoje = new Date();
+  const container = document.getElementById("calendario");
+
+  function indicePorData(data, total) {
+    const seed =
+      data.getFullYear()*10000 +
+      (data.getMonth()+1)*100 +
+      data.getDate();
+    return seed % total;
+  }
+
+  let cursor = new Date(DATA_INICIO);
+
+  while (cursor <= hoje) {
+    const ano = cursor.getFullYear();
+    const mes = cursor.getMonth();
+
+    const mesDiv = document.createElement("div");
+    mesDiv.className = "mes";
+    mesDiv.innerHTML = `<h2>${cursor.toLocaleDateString("pt-BR",{month:"long",year:"numeric"})}</h2><div class="grid"></div>`;
+    const grid = mesDiv.querySelector(".grid");
+
+    while (cursor.getMonth() === mes && cursor <= hoje) {
+      const dataAtual = new Date(cursor);
+
+      const poemasDisponiveis = db.poemas.filter(p =>
+        new Date(p.entraEm + "T00:00:00") <= dataAtual
+      );
+
+      if (poemasDisponiveis.length > 0) {
+        const idx = indicePorData(dataAtual, poemasDisponiveis.length);
+        const texto = poemasDisponiveis[idx].texto;
+
+        const dia = document.createElement("div");
+        dia.className = "dia";
+        dia.innerHTML = `
+          <div class="numero">${dataAtual.getDate()}</div>
+          <div class="poema">${texto.replace(/\n/g,"<br>")}</div>
+        `;
+        dia.onclick = () => {
+          const p = dia.querySelector(".poema");
+          p.style.display = p.style.display === "block" ? "none" : "block";
+        };
+        grid.appendChild(dia);
+      }
+
+      cursor.setDate(cursor.getDate() + 1);
+    }
+
+    container.appendChild(mesDiv);
+  }
+});
+</script>
+
+</body>
+</html>
